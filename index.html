@@ -1,52 +1,833 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="shortcut icon"
-      href="https://result.school/logo-result.school.png"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
-      crossorigin="anonymous"
-    />
-    <title>01. JS Base</title>
-    <script src="app.js" defer></script>
-    <script src="theory.js" defer></script>
-  </head>
-  <body class="bg-dark text-light">
-    <div class="container w-50 pt-5">
-      <h1>Калькулятор</h1>
-      <input
-        type="number"
-        class="form-control mb-2"
-        placeholder="Введите 1 число"
-        id="input1"
-        value="10"
-      />
-      <input
-        type="number"
-        class="form-control mb-2"
-        placeholder="Введите 2 число"
-        id="input2"
-        value="5"
-      />
-      <div class="d-flex mb-2">
-        <button class="btn btn-success flex-grow-1 mx-2" id="plus">+</button>
-        <button class="btn btn-danger flex-grow-1 mx-2" id="minus">-</button>
-      </div>
-      <button class="btn btn-outline-info w-100 mb-2" id="submit">
-        Вычислить
-      </button>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Osteo Study · Остеопатия</title>
+<style>
+:root{
+  --paper:#FAF6EF;
+  --card:#FFFDF8;
+  --ink:#1E2B27;
+  --ink-soft:#4A5A54;
+  --teal:#1C6E63;
+  --teal-deep:#134A43;
+  --teal-wash:#E7F0ED;
+  --clay:#C25A3A;
+  --clay-wash:#F8E9E2;
+  --sage:#6FA987;
+  --sage-wash:#E6F1EA;
+  --gold:#D79A2B;
+  --gold-wash:#F8EED6;
+  --line:#E4DBCB;
+  --shadow:0 2px 14px rgba(30,43,39,.08);
+  --r:18px;
+  --fs:19px;          /* controlled by A-/A+ */
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:var(--fs)}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  line-height:1.65;-webkit-text-size-adjust:100%;
+  padding-bottom:5.6rem;
+}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.25;margin:0}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:820px;margin:0 auto;padding:0 1.1rem}
 
-      <div class="text-bg-light p-3 text-center">
-        <h4>Результат:</h4>
-        <p id="result" class="mb-0">49</p>
-      </div>
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;background:var(--teal-deep);color:#fff;
+  display:flex;align-items:center;gap:.7rem;padding:.7rem 1.1rem;
+  box-shadow:0 2px 10px rgba(0,0,0,.12);
+}
+.topbar .logo{font-size:1.55rem}
+.topbar h1{font-size:1.18rem;color:#fff;flex:1;letter-spacing:.2px}
+.topbar h1 small{display:block;font-family:-apple-system,sans-serif;font-size:.72rem;font-weight:400;opacity:.8;letter-spacing:.3px}
+.fontctrl{display:flex;gap:.4rem}
+.fontctrl button{
+  width:2.4rem;height:2.4rem;border:none;border-radius:12px;
+  background:rgba(255,255,255,.16);color:#fff;font-size:1rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.fontctrl button:active{background:rgba(255,255,255,.3)}
+
+/* ---------- views ---------- */
+.view{display:none;padding-top:1.2rem;animation:fade .25s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--clay);margin-bottom:.35rem}
+.view-title{font-size:1.75rem;margin-bottom:.2rem}
+.view-sub{color:var(--ink-soft);margin:.1rem 0 1.3rem;font-size:.97rem}
+
+/* ---------- lesson list ---------- */
+.lcard{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:1.05rem 1.1rem;margin-bottom:.85rem;
+  display:flex;align-items:center;gap:1rem;width:100%;text-align:left;
+}
+.lcard:active{transform:scale(.99)}
+.lcard .ico{
+  flex:none;width:3.1rem;height:3.1rem;border-radius:15px;
+  display:flex;align-items:center;justify-content:center;font-size:1.6rem;
+  background:var(--teal-wash);
+}
+.lcard .meta{flex:1;min-width:0}
+.lcard .meta b{font-family:Georgia,serif;font-size:1.12rem;font-weight:700;display:block}
+.lcard .meta span{color:var(--ink-soft);font-size:.9rem}
+.lcard .chev{color:var(--teal);font-size:1.4rem;flex:none}
+.lcard .done{color:var(--sage);font-size:1.3rem}
+
+/* ---------- lesson reader ---------- */
+.backbtn{
+  display:inline-flex;align-items:center;gap:.4rem;background:none;border:none;
+  color:var(--teal);font-size:1rem;font-weight:600;padding:.3rem 0;margin-bottom:.6rem;
+}
+.lesson-head{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.lesson-head .ico{flex:none;width:3.4rem;height:3.4rem;border-radius:16px;background:var(--teal-wash);display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.lesson-head h2{font-size:1.5rem}
+.lesson-head .ru{color:var(--ink-soft);font-size:.95rem;font-family:-apple-system,sans-serif}
+
+.block{margin:0 0 1.15rem}
+.block .en{font-size:1.06rem;line-height:1.62}
+.block .ru{color:var(--ink-soft);font-size:.96rem;margin-top:.2rem;font-style:normal}
+.block.subhead{margin-top:1.6rem}
+.block.subhead .en{font-family:Georgia,serif;font-size:1.25rem;color:var(--teal-deep);font-weight:700}
+.block.subhead .ru{font-size:.95rem}
+
+.callout{background:var(--gold-wash);border-left:5px solid var(--gold);border-radius:12px;padding:.85rem 1rem;margin:1.1rem 0}
+.callout .tag{font-size:.74rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#9a6f12;display:flex;align-items:center;gap:.35rem;margin-bottom:.3rem}
+.callout .en{font-size:1.02rem}
+.callout .ru{color:#7c5f1e}
+
+.note{background:var(--clay-wash);border-left:5px solid var(--clay);border-radius:12px;padding:.85rem 1rem;margin:1.1rem 0}
+.note .tag{font-size:.74rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--clay);display:flex;align-items:center;gap:.35rem;margin-bottom:.3rem}
+.note .ru{color:#9c4830}
+
+/* numbered steps */
+.step{display:flex;gap:.9rem;margin:0 0 1rem;align-items:flex-start}
+.step .num{flex:none;width:2.2rem;height:2.2rem;border-radius:50%;background:var(--teal);color:#fff;font-family:Georgia,serif;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.step .en{font-size:1.05rem}
+.step .ru{color:var(--ink-soft);font-size:.94rem;margin-top:.15rem}
+
+/* point table (friction points) */
+.pt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem .95rem;margin-bottom:.6rem}
+.pt b{font-family:Georgia,serif;font-size:1.06rem}
+.pt .where{color:var(--teal-deep);font-size:.92rem;font-weight:600}
+.pt .ru{color:var(--ink-soft);font-size:.9rem;margin-top:.15rem}
+
+/* vocab inline */
+.vocab{color:var(--clay);font-weight:600;border-bottom:2px dotted var(--clay);cursor:pointer;padding-bottom:1px}
+.vocab:active{background:var(--clay-wash);border-radius:4px}
+
+/* speak line button */
+.speak{
+  background:var(--teal-wash);border:none;color:var(--teal-deep);
+  width:2.1rem;height:2.1rem;border-radius:10px;font-size:1rem;
+  display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;margin-right:.5rem;flex:none
+}
+.speak:active{background:var(--teal);color:#fff}
+
+/* script lines */
+.script{display:flex;align-items:flex-start;gap:.2rem;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:.7rem .8rem;margin-bottom:.6rem}
+.script .txt{flex:1}
+.script .en{font-size:1.04rem}
+.script .ru{color:var(--ink-soft);font-size:.9rem;margin-top:.15rem}
+
+/* illustration */
+.illo{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin:1.1rem 0;text-align:center}
+.illo svg{max-width:100%;height:auto}
+.illo img{max-width:100%;height:auto;border-radius:12px;cursor:zoom-in;background:#fff}
+.illo .cap{font-size:.86rem;color:var(--ink-soft);margin-top:.5rem}
+.illo .zoom{font-size:.78rem;color:var(--teal);margin-top:.2rem}
+/* lightbox */
+.lb img{width:100%;height:auto;border-radius:14px;background:#fff}
+.lb .cap{color:var(--ink-soft);font-size:.95rem;margin-top:.7rem;text-align:center}
+
+/* lesson done toggle */
+.donebtn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;margin:1.8rem 0 .5rem;
+  padding:.95rem;border-radius:14px;border:2px solid var(--sage);background:var(--sage-wash);color:var(--teal-deep);font-size:1.05rem;font-weight:700}
+.donebtn.on{background:var(--sage);color:#fff;border-color:var(--sage)}
+
+/* ---------- dictionary ---------- */
+.search{width:100%;padding:.9rem 1rem;font-size:1.05rem;border:2px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);margin-bottom:1rem}
+.search:focus{outline:none;border-color:var(--teal)}
+.dword{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.85rem 1rem;margin-bottom:.7rem;display:flex;gap:.7rem;align-items:flex-start}
+.dword .body{flex:1}
+.dword .en{font-family:Georgia,serif;font-size:1.18rem;font-weight:700}
+.dword .pron{color:var(--clay);font-weight:600;font-size:.92rem;margin-left:.4rem}
+.dword .ru{color:var(--teal-deep);font-size:1rem;font-weight:600;margin-top:.1rem}
+.dword .def{color:var(--ink-soft);font-size:.9rem;margin-top:.25rem}
+
+/* ---------- flashcards ---------- */
+.fc-stage{perspective:1200px;margin:.5rem 0 1rem}
+.fc{position:relative;width:100%;min-height:15rem;cursor:pointer;transition:transform .5s;transform-style:preserve-3d}
+.fc.flip{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:22px;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.5rem}
+.fc-front{background:var(--card);border:1px solid var(--line)}
+.fc-back{background:var(--teal);color:#fff;transform:rotateY(180deg)}
+.fc-front .w{font-family:Georgia,serif;font-size:2rem;font-weight:700}
+.fc-front .p{color:var(--clay);font-size:1.05rem;font-weight:600;margin-top:.5rem}
+.fc-back .w{font-family:Georgia,serif;font-size:1.9rem}
+.fc-back .d{font-size:1rem;opacity:.92;margin-top:.7rem;line-height:1.5}
+.fc-hint{font-size:.8rem;opacity:.6;margin-top:1.2rem}
+.fc-controls{display:flex;gap:.7rem;margin-bottom:.7rem}
+.fc-controls button{flex:1;padding:.95rem;border-radius:14px;border:none;font-size:1rem;font-weight:700}
+.btn-again{background:var(--clay-wash);color:var(--clay)}
+.btn-know{background:var(--sage-wash);color:var(--teal-deep)}
+.fc-progress{text-align:center;color:var(--ink-soft);font-size:.9rem;margin-bottom:.6rem}
+
+/* ---------- quiz ---------- */
+.quiz-pick{display:flex;gap:.8rem;margin-bottom:1.2rem}
+.quiz-pick button{flex:1;padding:1.1rem .8rem;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-size:1rem;font-weight:700;text-align:center}
+.quiz-pick button .ico{font-size:1.7rem;display:block;margin-bottom:.3rem}
+.quiz-pick button.sel{border-color:var(--teal);background:var(--teal-wash)}
+.q-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:1.2rem;margin-bottom:1rem}
+.q-count{font-size:.82rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--clay);margin-bottom:.5rem}
+.q-text{font-family:Georgia,serif;font-size:1.3rem;font-weight:700;margin-bottom:.3rem}
+.q-text-ru{color:var(--ink-soft);font-size:.92rem;margin-bottom:1.1rem}
+.opt{display:block;width:100%;text-align:left;padding:.9rem 1rem;border-radius:13px;border:2px solid var(--line);background:#fff;color:var(--ink);font-size:1.05rem;margin-bottom:.65rem;transition:.15s}
+.opt:active{transform:scale(.99)}
+.opt.correct{border-color:var(--sage);background:var(--sage-wash);font-weight:700}
+.opt.wrong{border-color:var(--clay);background:var(--clay-wash)}
+.opt:disabled{opacity:1}
+.q-next{width:100%;padding:1rem;border-radius:14px;border:none;background:var(--teal);color:#fff;font-size:1.05rem;font-weight:700;margin-top:.3rem}
+.q-explain{margin-top:.2rem;margin-bottom:.9rem;background:var(--sage-wash);border-left:5px solid var(--sage);border-radius:12px;padding:.85rem 1rem}
+.q-explain .ans{font-weight:700;color:var(--teal-deep);font-size:1.02rem;margin-bottom:.3rem}
+.q-explain .why{font-size:.98rem}
+.q-explain .why-ru{color:var(--ink-soft);font-size:.92rem;margin-top:.2rem}
+.q-result{text-align:center;padding:2rem 1rem}
+.q-result .big{font-family:Georgia,serif;font-size:3rem;color:var(--teal)}
+.q-result .msg{font-size:1.2rem;margin:.4rem 0 1.4rem}
+
+/* ---------- bottom nav ---------- */
+.tabbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--card);
+  border-top:1px solid var(--line);display:flex;
+  padding:.35rem .3rem calc(.35rem + env(safe-area-inset-bottom));box-shadow:0 -2px 14px rgba(30,43,39,.07);
+}
+.tabbar button{flex:1;background:none;border:none;color:var(--ink-soft);
+  display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.5rem .2rem;border-radius:14px;font-size:.74rem;font-weight:600}
+.tabbar button .ti{font-size:1.5rem;line-height:1}
+.tabbar button.active{color:var(--teal)}
+.tabbar button.active .ti{transform:translateY(-2px)}
+
+/* ---------- vocab popup ---------- */
+.scrim{position:fixed;inset:0;background:rgba(20,30,27,.45);z-index:60;display:none;align-items:flex-end;justify-content:center}
+.scrim.show{display:flex}
+.pop{background:var(--card);border-radius:24px 24px 0 0;width:100%;max-width:520px;padding:1.4rem 1.3rem calc(1.6rem + env(safe-area-inset-bottom));box-shadow:0 -6px 30px rgba(0,0,0,.2);animation:slideup .28s ease}
+@keyframes slideup{from{transform:translateY(100%)}to{transform:none}}
+.pop .grab{width:42px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 1rem}
+.pop .pw{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.pop .pw .word{font-family:Georgia,serif;font-size:1.7rem;font-weight:700}
+.pop .pw .pron{color:var(--clay);font-weight:700;font-size:1.05rem}
+.pop .pru{color:var(--teal-deep);font-size:1.25rem;font-weight:700;margin:.5rem 0 .3rem}
+.pop .pdef{color:var(--ink-soft);font-size:1rem;line-height:1.55}
+.pop .pbtn{margin-top:1.1rem;width:100%;padding:.95rem;border-radius:14px;border:none;background:var(--teal);color:#fff;font-size:1.05rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:.5rem}
+
+@media(min-width:560px){:root{--fs:20px}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="logo">🌿</span>
+  <h1>Osteo Study <small>остеопатия · по-английски, понятно</small></h1>
+  <div class="fontctrl">
+    <button onclick="setFont(-1)" aria-label="Smaller text">A−</button>
+    <button onclick="setFont(1)" aria-label="Larger text">A+</button>
+  </div>
+</div>
+
+<!-- ============ LESSONS ============ -->
+<section id="v-lessons" class="view active">
+  <div class="wrap">
+    <div id="lesson-list">
+      <div class="eyebrow">Module 1 · Модуль 1</div>
+      <h2 class="view-title">Tendons &amp; Fascia</h2>
+      <p class="view-sub">Сухожилия, тендинит, массаж трением и фасции. Нажми на урок, чтобы открыть. Слова с <span style="color:var(--clay);border-bottom:2px dotted var(--clay)">пунктиром</span> можно нажать — будет перевод и озвучка.</p>
+      <div id="lcards"></div>
     </div>
-  </body>
+    <div id="lesson-reader" style="display:none"></div>
+  </div>
+</section>
+
+<!-- ============ DICTIONARY ============ -->
+<section id="v-dict" class="view">
+  <div class="wrap">
+    <div class="eyebrow">Vocabulary · Словарь</div>
+    <h2 class="view-title">Dictionary</h2>
+    <p class="view-sub">Все важные слова темы. Нажми 🔊 чтобы услышать произношение.</p>
+    <input id="dsearch" class="search" placeholder="Search / поиск слова..." oninput="renderDict(this.value)">
+    <div id="dlist"></div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section id="v-cards" class="view">
+  <div class="wrap">
+    <div class="eyebrow">Flashcards · Карточки</div>
+    <h2 class="view-title">Memory cards</h2>
+    <p class="view-sub">Прочитай слово, скажи перевод вслух, потом переверни карточку и проверь себя.</p>
+    <div class="fc-progress" id="fc-prog"></div>
+    <div class="fc-stage"><div class="fc" id="fc" onclick="flipCard()">
+      <div class="fc-face fc-front"><div class="w" id="fc-w"></div><div class="p" id="fc-p"></div><div class="fc-hint">Нажми, чтобы перевернуть →</div></div>
+      <div class="fc-face fc-back"><div class="w" id="fc-bw"></div><div class="d" id="fc-bd"></div><div class="fc-hint">↻ перевернуть назад</div></div>
+    </div></div>
+    <div class="fc-controls">
+      <button class="btn-again" onclick="markCard(false)">↻ Повторить</button>
+      <button class="btn-know" onclick="markCard(true)">✓ Знаю</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section id="v-quiz" class="view">
+  <div class="wrap">
+    <div class="eyebrow">Practice · Проверка</div>
+    <h2 class="view-title">Quiz</h2>
+    <p class="view-sub">Выбери тип проверки.</p>
+    <div class="quiz-pick">
+      <button id="qp-vocab" class="sel" onclick="startQuiz('vocab')"><span class="ico">🔤</span>Words<br>Слова</button>
+      <button id="qp-content" onclick="startQuiz('content')"><span class="ico">🧠</span>Material<br>Материал</button>
+    </div>
+    <div id="quiz-body"></div>
+  </div>
+</section>
+
+<!-- ============ TABBAR ============ -->
+<nav class="tabbar">
+  <button id="t-lessons" class="active" onclick="go('lessons')"><span class="ti">📖</span>Lessons</button>
+  <button id="t-dict" onclick="go('dict')"><span class="ti">🔤</span>Words</button>
+  <button id="t-cards" onclick="go('cards')"><span class="ti">🃏</span>Cards</button>
+  <button id="t-quiz" onclick="go('quiz')"><span class="ti">✅</span>Quiz</button>
+</nav>
+
+<!-- vocab popup -->
+<div class="scrim" id="scrim" onclick="if(event.target===this)closePop()">
+  <div class="pop" id="pop"></div>
+</div>
+
+<script>
+/* =================================================================
+   SAFE STORAGE (works as downloaded file; degrades in sandboxes)
+   ================================================================= */
+const store={
+  get(k,d){try{var v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){var mv=this._m[k];return mv===undefined?d:mv;}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){this._m[k]=v;}},
+  _m:{}
+};
+
+/* =================================================================
+   REAL IMAGES (Wikimedia Commons, free license, hotlinked).
+   Special:FilePath redirects to the actual file; ?width= serves a
+   sized thumbnail. If a photo fails to load, an SVG fallback shows.
+   ================================================================= */
+const IMG=name=>"https://commons.wikimedia.org/wiki/Special:FilePath/"+encodeURIComponent(name)+"?width=900";
+
+/* =================================================================
+   ILLUSTRATIONS (hand-built SVG, used as offline fallback)
+   ================================================================= */
+const ILLO={
+  tendon:`<svg viewBox="0 0 320 130" role="img" aria-label="Muscle, tendon and bone">
+    <rect x="14" y="44" width="118" height="42" rx="21" fill="#C25A3A"/>
+    <text x="73" y="71" fill="#fff" font-size="15" font-family="Georgia" text-anchor="middle">muscle</text>
+    <path d="M132 56 q22 9 56 9 q-34 0 -56 9 z" fill="#E2C27A"/>
+    <rect x="186" y="58" width="64" height="14" rx="7" fill="#E9D9A6"/>
+    <text x="218" y="46" fill="#8a6d2a" font-size="12" font-family="Georgia" text-anchor="middle">tendon</text>
+    <rect x="250" y="40" width="56" height="50" rx="12" fill="#EDE7D7" stroke="#C9BE9E" stroke-width="2"/>
+    <text x="278" y="69" fill="#6b6044" font-size="14" font-family="Georgia" text-anchor="middle">bone</text>
+  </svg>`,
+  layers:`<svg viewBox="0 0 320 150" role="img" aria-label="Three layers of fascia">
+    <rect x="40" y="20" width="240" height="22" rx="6" fill="#F2D7A6"/><text x="160" y="35" font-size="12" text-anchor="middle" fill="#7c5f1e" font-family="Georgia">superficial · поверхностная</text>
+    <rect x="40" y="50" width="240" height="22" rx="6" fill="#9DC9B3"/><text x="160" y="65" font-size="12" text-anchor="middle" fill="#1b4f3e" font-family="Georgia">deep · глубокая</text>
+    <rect x="40" y="80" width="240" height="22" rx="6" fill="#7FB6C9"/><text x="160" y="95" font-size="12" text-anchor="middle" fill="#16424f" font-family="Georgia">subserous · подсерозная</text>
+    <ellipse cx="160" cy="126" rx="46" ry="16" fill="#E8A6A6"/><text x="160" y="131" font-size="11" text-anchor="middle" fill="#7a2f2f" font-family="Georgia">organs · органы</text>
+  </svg>`,
+  friction:`<svg viewBox="0 0 320 120" role="img" aria-label="Friction back and forth on a tendon">
+    <rect x="40" y="62" width="240" height="16" rx="8" fill="#E2C27A"/>
+    <circle cx="160" cy="50" r="20" fill="#C25A3A"/><text x="160" y="55" font-size="13" fill="#fff" text-anchor="middle">👆</text>
+    <path d="M96 36 H224" stroke="#1C6E63" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M96 36 l10 -8 v16 z" fill="#1C6E63"/><path d="M224 36 l-10 -8 v16 z" fill="#1C6E63"/>
+    <text x="160" y="104" font-size="13" text-anchor="middle" fill="#4A5A54" font-family="Georgia">back &amp; forth · вперёд-назад</text>
+  </svg>`,
+  bodysuit:`<svg viewBox="0 0 200 150" role="img" aria-label="Fascia covers the whole body like a suit">
+    <path d="M100 14 a13 13 0 1 1 -.1 0 z" fill="#9DC9B3"/>
+    <path d="M82 40 q18 -8 36 0 l8 46 -12 4 -4 44 h-10 l-2 -34 -2 34 h-10 l-4 -44 -12 -4 z" fill="#9DC9B3" stroke="#1C6E63" stroke-width="2"/>
+    <text x="148" y="80" font-size="12" fill="#1b4f3e" font-family="Georgia">head → toes</text>
+    <text x="148" y="96" font-size="11" fill="#4A5A54">голова → пятки</text>
+  </svg>`
+};
+
+/* =================================================================
+   VOCABULARY  (en, ru, pron = Russian-style hint, def = simple EN)
+   ================================================================= */
+const VOCAB=[
+ {en:"tendon",ru:"сухожилие",pron:"ТЕН-дон",def:"A strong band that joins muscle to bone."},
+ {en:"muscle",ru:"мышца",pron:"МАСл",def:"The part of the body that pulls bones to move."},
+ {en:"bone",ru:"кость",pron:"БОУН",def:"The hard part inside the body."},
+ {en:"ligament",ru:"связка",pron:"ЛИ-га-мент",def:"A band that joins bone to bone (not muscle)."},
+ {en:"fibrous tissue",ru:"волокнистая ткань",pron:"ФАЙ-брус ТИ-шью",def:"Tissue made of strong fibres."},
+ {en:"contract",ru:"сокращаться",pron:"кон-ТРАКТ",def:"When a muscle gets shorter and pulls."},
+ {en:"glide",ru:"скользить",pron:"ГЛАЙД",def:"To move smoothly and easily."},
+ {en:"Achilles tendon",ru:"ахиллово сухожилие",pron:"а-КИ-лиз ТЕН-дон",def:"The big tendon at the back of the heel."},
+ {en:"synovial sheath",ru:"синовиальное влагалище",pron:"си-НОУ-виал ШИИС",def:"A wet tube the tendon slides through."},
+ {en:"retinaculum",ru:"удерживатель",pron:"ре-ти-НА-ку-лум",def:"A band that holds tendons in place."},
+ {en:"tendonitis",ru:"тендинит (воспаление сухожилия)",pron:"тен-до-НАЙ-тис",def:"When a tendon is inflamed and painful."},
+ {en:"inflamed",ru:"воспалённый",pron:"ин-ФЛЕЙМД",def:"Red, hot, swollen and painful."},
+ {en:"inflammation",ru:"воспаление",pron:"ин-фла-МЕЙ-шн",def:"The body's reaction: red, hot, painful, swollen."},
+ {en:"overuse",ru:"чрезмерная нагрузка",pron:"оу-вер-ЮЗ",def:"Using a body part too much, too often."},
+ {en:"friction",ru:"трение",pron:"ФРИК-шн",def:"Rubbing back and forth on a spot."},
+ {en:"adhesion",ru:"спайка / сращение",pron:"ад-ХИ-жн",def:"A stuck, hard spot in the tissue."},
+ {en:"palpable",ru:"прощупываемый",pron:"ПАЛ-па-бл",def:"Something you can feel with your fingers."},
+ {en:"pressure",ru:"давление",pron:"ПРЕ-шер",def:"How hard you press."},
+ {en:"discomfort",ru:"дискомфорт",pron:"дис-КАМ-форт",def:"A small bad feeling, not strong pain."},
+ {en:"bearable",ru:"терпимый",pron:"БЕА-ра-бл",def:"Not too much — the person can handle it."},
+ {en:"flush",ru:"промыть (разогнать кровь)",pron:"ФЛАШ",def:"To rub so fresh blood comes to the area."},
+ {en:"stretch",ru:"растягивать",pron:"СТРЕЧ",def:"To make a muscle longer, gently."},
+ {en:"consent",ru:"согласие",pron:"кон-СЕНТ",def:"When the client says 'yes, you may'."},
+ {en:"fascia",ru:"фасция",pron:"ФА-ша",def:"A body-wide tissue that covers muscles and bones."},
+ {en:"restriction",ru:"ограничение",pron:"рис-ТРИК-шн",def:"When tissue cannot move freely."},
+ {en:"whiplash",ru:"хлыстовая травма (шеи)",pron:"УИП-лаш",def:"A fast neck injury, often in car crashes."},
+ {en:"posture",ru:"осанка",pron:"ПОС-чер",def:"How you hold your body when you sit or stand."},
+ {en:"superficial",ru:"поверхностный",pron:"су-пер-ФИ-шл",def:"Near the surface, on top."},
+ {en:"scar tissue",ru:"рубцовая ткань",pron:"СКАР ТИ-шью",def:"Hard tissue that forms after an injury."},
+ {en:"sciatica",ru:"ишиас (боль по ноге)",pron:"сай-А-ти-ка",def:"Pain that goes down the leg from the back."},
+ {en:"numbness",ru:"онемение",pron:"НАМ-нес",def:"When you feel nothing in a body part."},
+ {en:"spasm",ru:"спазм",pron:"СПА-зм",def:"A sudden tight squeeze of a muscle."},
+ {en:"myofascial release",ru:"миофасциальный релиз",pron:"майо-ФА-шл ри-ЛИИС",def:"A technique to relax muscle and fascia."},
+ {en:"supine",ru:"лёжа на спине",pron:"су-ПАЙН",def:"Lying on the back, face up."},
+ {en:"prone",ru:"лёжа на животе",pron:"ПРОУН",def:"Lying on the stomach, face down."},
+ {en:"abduction",ru:"отведение (в сторону)",pron:"аб-ДАК-шн",def:"Moving a limb away from the body."},
+ {en:"hamstrings",ru:"задняя поверхность бедра",pron:"ХАМ-стрингз",def:"The muscles at the back of the thigh."},
+ {en:"plantar fascia",ru:"подошвенная фасция",pron:"ПЛАН-тар ФА-ша",def:"The fascia on the bottom of the foot."},
+ {en:"calcaneus",ru:"пяточная кость",pron:"кал-КЕЙ-ни-ус",def:"The heel bone."},
+ {en:"kneading",ru:"разминание",pron:"НИ-динг",def:"A massage move, like working dough."},
+ {en:"effleurage",ru:"поглаживание",pron:"эф-лю-РАЖ",def:"Smooth, light gliding strokes."},
+ {en:"heat",ru:"тепло",pron:"ХИИТ",def:"Warmth — used to relax tissue."},
+ {en:"ice",ru:"лёд",pron:"АЙС",def:"Cold — used to calm pain at the end."}
+];
+const VMAP={};VOCAB.forEach(v=>VMAP[v.en.toLowerCase()]=v);
+
+/* =================================================================
+   LESSONS
+   ================================================================= */
+const LESSONS=[
+ {id:"tendon",icon:"🦴",title:"What is a Tendon?",ru:"Что такое сухожилие",
+  blocks:[
+   {t:"illo",img:"Skeletal muscle.jpg",k:"tendon",cap:"Muscle structure — the muscle ends in a tendon that attaches to bone · Мышца переходит в сухожилие и крепится к кости"},
+   {t:"p",en:"A tendon is a strong but soft band of tissue.",ru:"Сухожилие — это крепкая, но мягкая полоса ткани."},
+   {t:"p",en:"It connects your muscle to your bone.",ru:"Оно соединяет мышцу с костью."},
+   {t:"p",en:"When a muscle contracts, it pulls the tendon. The tendon moves the bone. So you can walk, jump and lift.",ru:"Когда мышца сокращается, она тянет сухожилие. Сухожилие двигает кость. Так вы можете ходить, прыгать и поднимать."},
+   {t:"p",en:"Some tendons are very small, like in your fingers. Some are big, like the Achilles tendon in your heel.",ru:"Некоторые сухожилия очень маленькие, как в пальцах. Некоторые большие, как ахиллово сухожилие в пятке."},
+   {t:"p",en:"A healthy tendon glides easily and smoothly.",ru:"Здоровое сухожилие скользит легко и плавно."},
+   {t:"p",en:"A tendon slides through a synovial sheath — a wet tube that helps it move.",ru:"Сухожилие скользит внутри синовиального влагалища — влажной трубки, которая помогает движению."},
+   {t:"callout",en:"Tendon vs ligament: a tendon joins muscle to bone. A ligament joins bone to bone. Do not mix them!",ru:"Сухожилие vs связка: сухожилие соединяет мышцу с костью, связка — кость с костью. Не путать!"}
+  ]},
+ {id:"tendonitis",icon:"🔥",title:"Tendonitis",ru:"Тендинит",
+  blocks:[
+   {t:"p",en:"Tendonitis is when a tendon becomes inflamed. It is red, hot, swollen and painful.",ru:"Тендинит — это когда сухожилие воспаляется. Оно красное, горячее, опухшее и болит."},
+   {t:"p",en:"The most common cause is overuse — too much repeated movement.",ru:"Самая частая причина — чрезмерная нагрузка, слишком много повторов."},
+   {t:"p",en:"One more cause is age. The tendon changes as we get older.",ru:"Ещё одна причина — возраст. Сухожилие меняется со временем."},
+   {t:"p",en:"Friction massage can help the tendon heal faster.",ru:"Массаж трением может помочь сухожилию зажить быстрее."},
+   {t:"callout",en:"Tendons heal slowly. They get only a little blood, so they need time and rest.",ru:"Сухожилия заживают медленно: к ним идёт мало крови, поэтому нужны время и покой."}
+  ]},
+ {id:"friction",icon:"💆",title:"Friction Massage",ru:"Массаж трением",
+  blocks:[
+   {t:"illo",k:"friction",cap:"Move the fingers back and forth on the tendon"},
+   {t:"p",en:"First, find the palpable adhesion — a stuck spot you can feel with your fingers.",ru:"Сначала найдите спайку — застывшее место, которое можно прощупать пальцами."},
+   {t:"p",en:"Remove the oil from your hands and from the skin.",ru:"Уберите масло с рук и с кожи."},
+   {t:"p",en:"Use the pads of your fingers or your thumb. Move back and forth over the tendon.",ru:"Используйте подушечки пальцев или большой палец. Двигайтесь вперёд-назад по сухожилию."},
+   {t:"p",en:"Use moderate pressure. The client will feel discomfort. The pain should be sharp or burning, but bearable.",ru:"Давление умеренное. Клиент почувствует дискомфорт. Боль может быть резкой или жгучей, но терпимой."},
+   {t:"note",en:"If there is no pain, you are in the wrong place, or the client does not have tendonitis.",ru:"Если боли нет — вы не там, либо у клиента нет тендинита."},
+   {t:"p",en:"After 1–2 minutes the discomfort goes down.",ru:"Через 1–2 минуты дискомфорт уменьшается."},
+   {t:"note",en:"Friction is painful. Always ask for extra consent before you start.",ru:"Трение болезненно. Всегда просите дополнительное согласие перед началом."}
+  ]},
+ {id:"steps",icon:"🔢",title:"Friction — Step by Step",ru:"Трение: порядок действий",
+  blocks:[
+   {t:"step",n:1,en:"Friction for 2 minutes, until the pain goes down. Then flush the area to bring blood.",ru:"Трение 2 минуты, пока боль не уменьшится. Затем «промойте» зону, чтобы пришла кровь."},
+   {t:"step",n:2,en:"Increase the pressure. Friction for 2 more minutes. Flush again.",ru:"Увеличьте давление. Ещё 2 минуты трения. Снова промойте."},
+   {t:"step",n:3,en:"Increase again. Friction for 2 minutes. Flush. Then stretch the area for 30 seconds.",ru:"Снова увеличьте. 2 минуты трения. Промойте. Потом растяжка зоны 30 секунд."},
+   {t:"step",n:4,en:"Finish with ice for 1–2 minutes, until the client feels numbness.",ru:"Завершите льдом на 1–2 минуты, пока клиент не почувствует онемение."},
+   {t:"callout",en:"Total time: about 6–8 minutes. Do it 2 times per week. Friction = 3 rounds of 2 minutes.",ru:"Всего: примерно 6–8 минут. Делать 2 раза в неделю. Трение = 3 подхода по 2 минуты."}
+  ]},
+ {id:"points",icon:"📍",title:"Common Friction Points",ru:"Частые точки для трения",
+  blocks:[
+   {t:"p",en:"These are common places to use the friction technique.",ru:"Это частые места, где применяют технику трения."},
+   {t:"illo",img:"1105 Anterior and Posterior Views of Muscles.jpg",k:"friction",cap:"Body muscle map — use it to find each friction point · Карта мышц тела — ищи по ней каждую точку"},
+   {t:"pt",b:"Supraspinatus",where:"Shoulder · плечо",ru:"Lie face down (prone), arm 15° out · лёжа на животе, рука на 15° в сторону"},
+   {t:"pt",b:"Biceps brachii",where:"Front of the arm · передняя часть руки",ru:"Lie face up (supine), bend the arm · лёжа на спине, согнуть руку"},
+   {t:"pt",b:"Forearm extensors",where:"Outside of elbow (lateral) · снаружи локтя",ru:"«Tennis elbow» area · зона «локтя теннисиста»"},
+   {t:"pt",b:"Forearm flexors",where:"Inside of elbow (medial) · внутри локтя",ru:"«Golfer's elbow» area · зона «локтя гольфиста»"},
+   {t:"pt",b:"Abductor pollicis longus",where:"Thumb · большой палец",ru:"At the «snuffbox» / табакерка"},
+   {t:"pt",b:"Flexor retinaculum",where:"Wrist · запястье",ru:"Carpal tunnel syndrome · синдром запястного канала"},
+   {t:"pt",b:"Hamstrings (origin)",where:"Back of thigh · задняя часть бедра",ru:"At the sitting bone, lie face down · у седалищного бугра, лёжа на животе"},
+   {t:"pt",b:"Iliotibial band (IT)",where:"Outside of thigh · снаружи бедра",ru:"From hip down to knee · от бедра до колена"},
+   {t:"pt",b:"Achilles tendon",where:"Back of heel · задняя часть пятки",ru:"Friction to the calcaneus · трение к пяточной кости"},
+   {t:"pt",b:"Infrapatellar tendon",where:"Below the kneecap · под коленной чашечкой",ru:""},
+   {t:"pt",b:"Suprapatellar tendon",where:"Above the kneecap · над коленной чашечкой",ru:""},
+   {t:"pt",b:"Plantar fascia",where:"Sole of the foot · подошва стопы",ru:"Medial part · внутренняя часть"},
+   {t:"pt",b:"Piriformis insertion",where:"Deep in the hip · глубоко в бедре",ru:"At the trochanter; resist lateral rotation to find it · у вертела; найти через сопротивление вращению"},
+   {t:"pt",b:"Quadratus lumborum",where:"Lower back · поясница",ru:"At the iliac crest · у гребня подвздошной кости"}
+  ]},
+ {id:"fascia",icon:"🧣",title:"What is Fascia?",ru:"Что такое фасция",
+  blocks:[
+   {t:"illo",k:"bodysuit",cap:"Fascia is like a body suit from head to toes"},
+   {t:"p",en:"Fascia is a strong and flexible tissue. It covers all your muscles and bones.",ru:"Фасция — крепкая и гибкая ткань. Она покрывает все мышцы и кости."},
+   {t:"p",en:"Think of it like a full body suit, from your head to your toes.",ru:"Представьте её как костюм на всё тело, от головы до пальцев ног."},
+   {t:"p",en:"It is continuous. It has no beginning and no end.",ru:"Она непрерывна. У неё нет ни начала, ни конца."},
+   {t:"p",en:"In a healthy body, fascia is soft and relaxed. It stretches and moves freely.",ru:"В здоровом теле фасция мягкая и расслабленная. Она тянется и двигается свободно."},
+   {t:"p",en:"After trauma or inflammation, fascia can become tight and restricted.",ru:"После травмы или воспаления фасция может стать тугой и ограниченной."},
+   {t:"note",en:"Damage in one area can affect another, far area — even years later.",ru:"Повреждение в одном месте может повлиять на другое, далёкое — даже годы спустя."},
+   {t:"illo",img:"Layers of the skin.jpg",k:"layers",cap:"Skin and fascia layers — the superficial fascia (with fat) sits under the skin · Слои кожи и фасции — поверхностная фасция (с жиром) лежит под кожей"},
+   {t:"subhead",en:"Three layers",ru:"Три слоя"},
+   {t:"p",en:"1) Superficial fascia — on top, mixed with some fat. 2) Deep fascia — covers and protects the muscles. 3) Subserous fascia — sits between deep fascia and the organs.",ru:"1) Поверхностная — сверху, с небольшим количеством жира. 2) Глубокая — покрывает и защищает мышцы. 3) Подсерозная — между глубокой фасцией и органами."}
+  ]},
+ {id:"problems",icon:"⚠️",title:"Fascia: Problems &amp; Causes",ru:"Фасция: проблемы и причины",
+  blocks:[
+   {t:"subhead",en:"When fascia is too tight, it can cause:",ru:"Когда фасция слишком тугая, это может вызвать:"},
+   {t:"p",en:"• Headaches • Muscle pain and spasms • Chronic back and neck pain • Sciatica • Breathing difficulties • Numbness, pins and needles • Poor posture and less movement",ru:"• Головные боли • Мышечную боль и спазмы • Хроническую боль в спине и шее • Ишиас • Трудности с дыханием • Онемение, «мурашки» • Плохую осанку и меньше движения"},
+   {t:"subhead",en:"Why fascia becomes too tight:",ru:"Почему фасция становится тугой:"},
+   {t:"p",en:"• Inflammation • Traumas • Work injuries • Prolonged sitting • Emotional stress • Repetitive motions",ru:"• Воспаление • Травмы • Производственные травмы • Долгое сидение • Эмоциональный стресс • Повторяющиеся движения"}
+  ]},
+ {id:"techniques",icon:"✋",title:"Fascia Techniques",ru:"Техники работы с фасцией",
+  blocks:[
+   {t:"subhead",en:"Skin rolling — 10 min",ru:"Раскатывание кожи"},
+   {t:"p",en:"Lift and roll the skin to warm up and stretch the fascia. Use no oil. Do it for 3–5 minutes.",ru:"Приподнимайте и катайте кожу, чтобы разогреть и растянуть фасцию. Без масла. 3–5 минут."},
+   {t:"subhead",en:"Fascial spreading — 2 min",ru:"Растяжение фасции"},
+   {t:"p",en:"For smaller muscles. Use fingertips or thumbs. Move them together or apart.",ru:"Для малых мышц. Подушечками пальцев или большими пальцами. Двигайте их вместе или врозь."},
+   {t:"subhead",en:"Cross hands stretch — 2 min",ru:"Растяжка крест-накрест"},
+   {t:"p",en:"Push your hands apart with light pressure. Hold for 90 seconds. The client may feel a burning sensation. Do not go too deep near organs and vessels.",ru:"Разводите руки с лёгким давлением. Держите 90 секунд. Клиент может чувствовать жжение. Не давите глубоко рядом с органами и сосудами."},
+   {t:"subhead",en:"C bowing &amp; S bowing — 2 min each",ru:"«C»- и «S»-изгибы"},
+   {t:"p",en:"Make a C shape on the skin (good for the Achilles). Then make an S shape with your thumbs.",ru:"Рисуйте «C» на коже (хорошо для ахилла). Потом «S» большими пальцами."},
+   {t:"subhead",en:"Fascial torquing",ru:"Скручивание фасции"},
+   {t:"p",en:"Only on the spine. Pull the skin with your thumb and fingertips.",ru:"Только на позвоночнике. Тяните кожу большим пальцем и подушечками."},
+   {t:"callout",en:"Tell the client: apply heat at home for 10–15 minutes on the area.",ru:"Скажите клиенту: дома приложить тепло на 10–15 минут на эту зону."}
+  ]},
+ {id:"mfr",icon:"🌀",title:"Myofascial Release",ru:"Миофасциальный релиз",
+  blocks:[
+   {t:"p",en:"Myofascial release is one of the best treatments for unhealthy fascia.",ru:"Миофасциальный релиз — одно из лучших средств для нездоровой фасции."},
+   {t:"callout",en:"Its purpose: break down scar tissue, relax the muscle and fascia, and restore good posture.",ru:"Его цель: разбить рубцовую ткань, расслабить мышцу и фасцию, вернуть хорошую осанку."}
+  ]},
+ {id:"scripts",icon:"💬",title:"What to Say to the Client",ru:"Что говорить клиенту",
+  blocks:[
+   {t:"subhead",en:"Friction speech",ru:"Речь перед трением"},
+   {t:"script",en:"I see in your file you have a palpable adhesion on your … tendon."},
+   {t:"script",en:"I am going to perform a friction technique. Is it ok?"},
+   {t:"script",en:"I am going to undrape your … . Is it ok?"},
+   {t:"script",en:"I am going to warm up the muscle."},
+   {t:"script",en:"Is my pressure ok? Are you comfortable?"},
+   {t:"script",en:"This is painful, so I need your extra consent. Is that ok?"},
+   {t:"script",en:"I am going to remove the oil from my hands and your muscle."},
+   {t:"script",en:"I am going to perform friction for 2 minutes."},
+   {t:"script",en:"Is the pain too much?"},
+   {t:"script",en:"I feel the adhesion breaking down. I am going to flush the area."},
+   {t:"script",en:"I am going to stretch this muscle for 30 seconds. Do you feel a stretch without pain?"},
+   {t:"script",en:"I am going to apply some ice for 1 to 2 minutes. How is the temperature?"},
+   {t:"script",en:"This technique is over."},
+   {t:"subhead",en:"Fascia speech",ru:"Речь перед работой с фасцией"},
+   {t:"script",en:"I see in your file you have some restriction in your fascia."},
+   {t:"script",en:"I am going to perform a fascial technique to relieve this."},
+   {t:"script",en:"You may feel some discomfort. Please let me know if this happens."},
+   {t:"script",en:"First I will apply heat for 3–5 minutes to relax the area."},
+   {t:"script",en:"Is the temperature ok?"},
+   {t:"script",en:"I will remove the oil from my hands. I will perform this technique without oil."},
+   {t:"script",en:"Are you comfortable? I feel the fascia is releasing."},
+   {t:"script",en:"My technique is over. I will apply heat for 3–5 minutes to relax the area. Is the temperature ok?"}
+  ]}
+];
+
+/* =================================================================
+   VOCAB HIGHLIGHTING inside English text
+   ================================================================= */
+const TERMS=VOCAB.map(v=>v.en).sort((a,b)=>b.length-a.length);
+const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+const TERM_RE=new RegExp("\\b("+TERMS.map(esc).join("|")+")\\b","gi");
+function highlight(txt){
+  return txt.replace(TERM_RE,(m)=>{
+    const key=m.toLowerCase();
+    if(VMAP[key]) return `<span class="vocab" onclick="showPop('${key}')">${m}</span>`;
+    return m;
+  });
+}
+
+/* =================================================================
+   RENDER LESSONS
+   ================================================================= */
+function renderLessonList(){
+  const done=store.get("done",{});
+  document.getElementById("lcards").innerHTML=LESSONS.map(l=>`
+    <button class="lcard" onclick="openLesson('${l.id}')">
+      <span class="ico">${l.icon}</span>
+      <span class="meta"><b>${l.title}</b><span>${l.ru}</span></span>
+      ${done[l.id]?'<span class="done">✓</span>':'<span class="chev">›</span>'}
+    </button>`).join("");
+}
+function blockHTML(b){
+  switch(b.t){
+    case"illo":{
+      const cap=b.cap?`<div class="cap">${b.cap}</div>`:"";
+      if(b.img){
+        const url=IMG(b.img);
+        const fb=ILLO[b.k]||"";
+        return `<div class="illo">
+          <img src="${url}" alt="${attr(b.cap||'')}" loading="lazy"
+               onclick="openImg('${url}','${attr(b.cap||'')}')"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+          <div style="display:none">${fb}</div>
+          ${cap}<div class="zoom">🔍 Tap to enlarge · нажми, чтобы увеличить</div></div>`;
+      }
+      return `<div class="illo">${ILLO[b.k]||""}${cap}</div>`;
+    }
+    case"subhead":return `<div class="block subhead"><div class="en"><button class="speak" onclick="say(this.dataset.s,event)" data-s="${attr(b.en)}">🔊</button>${highlight(b.en)}</div>${b.ru?`<div class="ru">${b.ru}</div>`:""}</div>`;
+    case"callout":return `<div class="callout"><div class="tag">💡 Tip · подсказка</div><div class="en">${highlight(b.en)}</div><div class="ru">${b.ru||""}</div></div>`;
+    case"note":return `<div class="note"><div class="tag">⚠️ Note · важно</div><div class="en">${highlight(b.en)}</div><div class="ru">${b.ru||""}</div></div>`;
+    case"step":return `<div class="step"><span class="num">${b.n}</span><div><div class="en">${highlight(b.en)}</div><div class="ru">${b.ru||""}</div></div></div>`;
+    case"pt":return `<div class="pt"><b>${b.b}</b> <span class="where">${b.where}</span>${b.ru?`<div class="ru">${b.ru}</div>`:""}</div>`;
+    case"script":return `<div class="script"><button class="speak" onclick="say(this.dataset.s,event)" data-s="${attr(b.en)}">🔊</button><div class="txt"><div class="en">${highlight(b.en)}</div>${b.ru?`<div class="ru">${b.ru}</div>`:""}</div></div>`;
+    default:return `<div class="block"><div class="en"><button class="speak" onclick="say(this.dataset.s,event)" data-s="${attr(b.en)}">🔊</button>${highlight(b.en)}</div>${b.ru?`<div class="ru">${b.ru}</div>`:""}</div>`;
+  }
+}
+const attr=s=>s.replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+function openLesson(id){
+  const l=LESSONS.find(x=>x.id===id);const done=store.get("done",{});
+  document.getElementById("lesson-list").style.display="none";
+  const r=document.getElementById("lesson-reader");
+  r.style.display="block";
+  r.innerHTML=`
+    <button class="backbtn" onclick="closeLesson()">‹ Back · все уроки</button>
+    <div class="lesson-head"><span class="ico">${l.icon}</span><div><h2>${l.title}</h2><div class="ru">${l.ru}</div></div></div>
+    ${l.blocks.map(blockHTML).join("")}
+    <button class="donebtn ${done[id]?'on':''}" id="donebtn" onclick="toggleDone('${id}')">
+      ${done[id]?'✓ Learned · выучено':'Mark as learned · отметить как выучено'}
+    </button>`;
+  window.scrollTo(0,0);
+}
+function closeLesson(){
+  document.getElementById("lesson-reader").style.display="none";
+  document.getElementById("lesson-list").style.display="block";
+  renderLessonList();window.scrollTo(0,0);
+}
+function toggleDone(id){
+  const done=store.get("done",{});done[id]=!done[id];store.set("done",done);
+  const b=document.getElementById("donebtn");
+  b.classList.toggle("on",done[id]);
+  b.innerHTML=done[id]?'✓ Learned · выучено':'Mark as learned · отметить как выучено';
+}
+
+/* =================================================================
+   SPEECH (offline on iPad Safari)
+   ================================================================= */
+let VOICE=null;
+function pickVoice(){
+  const vs=speechSynthesis.getVoices();
+  VOICE=vs.find(v=>/en-US/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null;
+}
+if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+function say(text,ev){
+  if(ev){ev.stopPropagation();}
+  if(!('speechSynthesis'in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/&quot;/g,'"').replace(/&#39;/g,"'"));
+  u.lang="en-US";u.rate=.85;if(VOICE)u.voice=VOICE;
+  speechSynthesis.speak(u);
+}
+
+/* =================================================================
+   VOCAB POPUP
+   ================================================================= */
+function showPop(key){
+  const v=VMAP[key];if(!v)return;
+  document.getElementById("pop").innerHTML=`
+    <div class="grab"></div>
+    <div class="pw"><span class="word">${v.en}</span><span class="pron">[${v.pron}]</span></div>
+    <div class="pru">${v.ru}</div>
+    <div class="pdef">${v.def}</div>
+    <button class="pbtn" onclick="say('${attr(v.en)}')">🔊 Listen · послушать</button>`;
+  document.getElementById("scrim").classList.add("show");
+}
+function closePop(){document.getElementById("scrim").classList.remove("show");}
+function openImg(url,cap){
+  document.getElementById("pop").innerHTML=`
+    <div class="grab"></div>
+    <div class="lb"><img src="${url}" alt="${cap}">${cap?`<div class="cap">${cap}</div>`:""}</div>`;
+  document.getElementById("scrim").classList.add("show");
+}
+
+/* =================================================================
+   DICTIONARY
+   ================================================================= */
+function renderDict(q=""){
+  q=q.trim().toLowerCase();
+  const list=VOCAB.filter(v=>!q||v.en.toLowerCase().includes(q)||v.ru.toLowerCase().includes(q))
+    .sort((a,b)=>a.en.localeCompare(b.en));
+  document.getElementById("dlist").innerHTML=list.map(v=>`
+    <div class="dword">
+      <button class="speak" onclick="say('${attr(v.en)}')">🔊</button>
+      <div class="body">
+        <div><span class="en">${v.en}</span><span class="pron">[${v.pron}]</span></div>
+        <div class="ru">${v.ru}</div>
+        <div class="def">${v.def}</div>
+      </div>
+    </div>`).join("")||`<p style="color:var(--ink-soft)">Nothing found · ничего не найдено</p>`;
+}
+
+/* =================================================================
+   FLASHCARDS
+   ================================================================= */
+let fcOrder=[],fcIdx=0,fcFlipped=false;
+function buildDeck(){
+  const known=store.get("known",{});
+  fcOrder=VOCAB.map((v,i)=>i).sort(()=>Math.random()-.5)
+    .sort((a,b)=>(known[VOCAB[a].en]?1:0)-(known[VOCAB[b].en]?1:0));
+  fcIdx=0;showCard();
+}
+function showCard(){
+  if(fcIdx>=fcOrder.length){buildDeck();return;}
+  const v=VOCAB[fcOrder[fcIdx]];fcFlipped=false;
+  document.getElementById("fc").classList.remove("flip");
+  document.getElementById("fc-w").textContent=v.en;
+  document.getElementById("fc-p").textContent="["+v.pron+"]";
+  document.getElementById("fc-bw").textContent=v.ru;
+  document.getElementById("fc-bd").textContent=v.def;
+  const known=store.get("known",{});
+  const cnt=Object.values(known).filter(Boolean).length;
+  document.getElementById("fc-prog").textContent=`Card ${fcIdx+1} / ${fcOrder.length} · знаю: ${cnt} из ${VOCAB.length}`;
+}
+function flipCard(){fcFlipped=!fcFlipped;document.getElementById("fc").classList.toggle("flip",fcFlipped);if(fcFlipped){const v=VOCAB[fcOrder[fcIdx]];say(v.en);}}
+function markCard(knows){
+  const v=VOCAB[fcOrder[fcIdx]];const known=store.get("known",{});
+  known[v.en]=knows;store.set("known",known);
+  fcIdx++;showCard();
+}
+
+/* =================================================================
+   QUIZ
+   ================================================================= */
+const CONTENT_Q=[
+ {q:"What does a tendon connect?",ru:"Что соединяет сухожилие?",a:"Muscle to bone",opts:["Muscle to bone","Bone to bone","Skin to fat","Nerve to brain"],
+  ex:"A tendon joins muscle to bone. (A ligament joins bone to bone.)",exRu:"Сухожилие соединяет мышцу с костью. (Связка — кость с костью.)"},
+ {q:"What is the most common cause of tendonitis?",ru:"Самая частая причина тендинита?",a:"Overuse",opts:["Overuse","Cold weather","Drinking water","Sleeping"],
+  ex:"Overuse — too much repeated movement — is the most common cause.",exRu:"Чрезмерная нагрузка — слишком много повторов — самая частая причина."},
+ {q:"During friction, the pain should be…",ru:"Во время трения боль должна быть…",a:"Sharp but bearable",opts:["Sharp but bearable","Very strong","None at all","Only in the morning"],
+  ex:"The pain should be clear but bearable. If it is too strong, you press too hard.",exRu:"Боль ощутимая, но терпимая. Если слишком сильная — вы давите слишком сильно."},
+ {q:"What do you apply at the very end of friction?",ru:"Что применяют в самом конце трения?",a:"Ice",opts:["Ice","More oil","Hot water","Nothing"],
+  ex:"Finish with ice for 1–2 minutes, until the client feels numbness.",exRu:"Завершают льдом на 1–2 минуты, пока не наступит онемение."},
+ {q:"How long is the full friction treatment?",ru:"Сколько длится полный сеанс трения?",a:"6–8 minutes",opts:["6–8 minutes","30 seconds","1 hour","2 days"],
+  ex:"Three rounds of 2-minute friction, plus flush, stretch and ice ≈ 6–8 minutes.",exRu:"Три подхода трения по 2 минуты + промывка, растяжка и лёд ≈ 6–8 минут."},
+ {q:"Fascia covers the body like…",ru:"Фасция покрывает тело как…",a:"A full body suit",opts:["A full body suit","A small patch","Only the head","Only bones"],
+  ex:"Fascia is continuous from head to toes, like a body suit. It has no start or end.",exRu:"Фасция непрерывна, от головы до пят, как костюм. У неё нет начала и конца."},
+ {q:"Which is a problem from tight fascia?",ru:"Что вызывает тугая фасция?",a:"Sciatica",opts:["Sciatica","Better eyesight","Faster running","Longer hair"],
+  ex:"Tight fascia can cause sciatica, headaches, back/neck pain, numbness and more.",exRu:"Тугая фасция может вызвать ишиас, головные боли, боль в спине/шее, онемение."},
+ {q:"In the cross hands stretch, you hold for…",ru:"Растяжку крест-накрест держат…",a:"90 seconds",opts:["90 seconds","2 hours","5 seconds","1 day"],
+  ex:"Hold the cross-hands stretch about 90 seconds with light pressure.",exRu:"Держат крест-накрест около 90 секунд с лёгким давлением."},
+ {q:"What is the purpose of myofascial release?",ru:"Цель миофасциального релиза?",a:"Break down scar tissue",opts:["Break down scar tissue","Add more oil","Make bones longer","Cool the room"],
+  ex:"It breaks down scar tissue, relaxes muscle and fascia, and restores good posture.",exRu:"Он разбивает рубцовую ткань, расслабляет мышцу и фасцию, возвращает осанку."},
+ {q:"'Prone' position means lying…",ru:"Положение «prone» — это лёжа…",a:"Face down",opts:["Face down","Face up","On the side","Standing"],
+  ex:"Prone = lying face down. Supine = lying face up.",exRu:"Prone — лёжа на животе. Supine — лёжа на спине."},
+ {q:"Before friction you must get…",ru:"Перед трением нужно получить…",a:"Extra consent",opts:["Extra consent","A coffee","A new towel","Money first"],
+  ex:"Friction is painful, so you must ask for extra consent first.",exRu:"Трение болезненно, поэтому сначала нужно дополнительное согласие."},
+ {q:"A ligament connects…",ru:"Связка соединяет…",a:"Bone to bone",opts:["Bone to bone","Muscle to bone","Skin to muscle","Hair to skin"],
+  ex:"A ligament joins bone to bone. A tendon joins muscle to bone.",exRu:"Связка соединяет кость с костью. Сухожилие — мышцу с костью."}
+];
+let qType="vocab",qList=[],qIdx=0,qScore=0,qAnswered=false;
+function startQuiz(type){
+  qType=type;
+  document.getElementById("qp-vocab").classList.toggle("sel",type==="vocab");
+  document.getElementById("qp-content").classList.toggle("sel",type==="content");
+  if(type==="vocab"){
+    qList=VOCAB.slice().sort(()=>Math.random()-.5).slice(0,10).map(v=>{
+      const others=VOCAB.filter(x=>x.en!==v.en).sort(()=>Math.random()-.5).slice(0,3).map(x=>x.en);
+      const opts=[v.en,...others].sort(()=>Math.random()-.5);
+      return{q:v.ru,ru:"["+v.pron+"]",a:v.en,opts,ex:v.def,exRu:v.ru};
+    });
+  }else{
+    qList=CONTENT_Q.slice().sort(()=>Math.random()-.5).slice(0,10).map(o=>({...o,opts:o.opts.slice().sort(()=>Math.random()-.5)}));
+  }
+  qIdx=0;qScore=0;renderQ();
+}
+function renderQ(){
+  if(qIdx>=qList.length)return renderResult();
+  qAnswered=false;const it=qList[qIdx];
+  const label=qType==="vocab"?"Choose the English word · выбери слово":"";
+  document.getElementById("quiz-body").innerHTML=`
+    <div class="q-card">
+      <div class="q-count">Question ${qIdx+1} / ${qList.length} · Score ${qScore}</div>
+      ${label?`<div class="q-text-ru">${label}</div>`:""}
+      <div class="q-text">${it.q}</div>
+      <div class="q-text-ru">${it.ru||""}</div>
+      <div id="opts">${it.opts.map(o=>`<button class="opt" onclick="answer(this,'${attr(o)}')">${o}</button>`).join("")}</div>
+      <button class="q-next" id="qnext" style="display:none" onclick="nextQ()">Next · далее →</button>
+    </div>`;
+}
+function answer(btn,choice){
+  if(qAnswered)return;qAnswered=true;
+  const it=qList[qIdx];const correct=it.a;
+  document.querySelectorAll("#opts .opt").forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===correct)b.classList.add("correct");
+    else if(b===btn)b.classList.add("wrong");
+  });
+  const picked=choice.replace(/&#39;/g,"'").replace(/&quot;/g,'"');
+  if(picked===correct){qScore++;if(qType==="vocab")say(correct);}
+  const explain=`
+    <div class="q-explain">
+      <div class="ans">✓ Correct answer · правильный ответ: ${correct}</div>
+      ${it.ex?`<div class="why">${it.ex}</div>`:""}
+      ${it.exRu?`<div class="why-ru">${it.exRu}</div>`:""}
+    </div>`;
+  document.getElementById("qnext").insertAdjacentHTML("beforebegin",explain);
+  document.getElementById("qnext").style.display="block";
+  document.querySelector(".q-count").textContent=`Question ${qIdx+1} / ${qList.length} · Score ${qScore}`;
+}
+function nextQ(){qIdx++;renderQ();}
+function renderResult(){
+  const pct=Math.round(qScore/qList.length*100);
+  let msg=pct>=90?"Excellent! Отлично! 🌟":pct>=70?"Well done! Молодец! 👏":pct>=50?"Good, keep going! Хорошо, продолжай! 💪":"Try again! Попробуй ещё раз 🙂";
+  const best=store.get("best_"+qType,0);if(qScore>best)store.set("best_"+qType,qScore);
+  document.getElementById("quiz-body").innerHTML=`
+    <div class="q-card q-result">
+      <div class="big">${qScore}/${qList.length}</div>
+      <div class="msg">${msg}</div>
+      <button class="q-next" onclick="startQuiz('${qType}')">Again · ещё раз</button>
+    </div>`;
+}
+
+/* =================================================================
+   NAV + FONT
+   ================================================================= */
+function go(v){
+  document.querySelectorAll(".view").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".tabbar button").forEach(b=>b.classList.remove("active"));
+  document.getElementById("v-"+v).classList.add("active");
+  document.getElementById("t-"+v).classList.add("active");
+  if(v==="lessons"){closeLesson();}
+  if(v==="dict"){renderDict(document.getElementById("dsearch").value);}
+  if(v==="cards"){buildDeck();}
+  if(v==="quiz"){startQuiz(qType);}
+  window.scrollTo(0,0);
+}
+const FS=[17,19,21,24,27];
+function setFont(dir){
+  let i=store.get("fsi",1);i=Math.max(0,Math.min(FS.length-1,i+dir));
+  store.set("fsi",i);document.documentElement.style.setProperty("--fs",FS[i]+"px");
+}
+function initFont(){const i=store.get("fsi",1);document.documentElement.style.setProperty("--fs",FS[i]+"px");}
+
+/* init */
+try{
+  initFont();
+  renderLessonList();
+}catch(err){
+  var lc=document.getElementById("lcards");
+  if(lc){lc.innerHTML='<div style="padding:1.2rem;background:#F8E9E2;border-radius:14px;color:#9c4830;font-size:1rem">'
+    +'Не удалось загрузить уроки на этом устройстве. Пожалуйста, обновите iOS/Safari до последней версии. '
+    +'<br><br>Could not load on this device — please update iOS/Safari.<br><span style="font-size:.8rem;opacity:.7">'
+    +(err&&err.message?err.message:'')+'</span></div>';}
+}
+</script>
+</body>
 </html>
