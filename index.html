@@ -229,6 +229,10 @@ button{font-family:inherit;cursor:pointer}
 .pop .pbtn{margin-top:1.1rem;width:100%;padding:.95rem;border-radius:14px;border:none;background:var(--teal);color:#fff;font-size:1.05rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:.5rem}
 
 @media(min-width:560px){:root{--fs:20px}}
+.mod-head{margin:1.7rem 0 .85rem;padding-bottom:.45rem;border-bottom:2px solid var(--line)}
+.mod-head b{font-family:Georgia,serif;font-size:1.18rem;color:var(--teal-deep);display:block}
+.mod-head span{font-size:.86rem;color:var(--ink-soft)}
+.mod-head:first-child{margin-top:.2rem}
 </style>
 </head>
 <body>
@@ -246,9 +250,9 @@ button{font-family:inherit;cursor:pointer}
 <section id="v-lessons" class="view active">
   <div class="wrap">
     <div id="lesson-list">
-      <div class="eyebrow">Module 1 · Модуль 1</div>
-      <h2 class="view-title">Tendons &amp; Fascia</h2>
-      <p class="view-sub">Сухожилия, тендинит, массаж трением и фасции. Нажми на урок, чтобы открыть. Слова с <span style="color:var(--clay);border-bottom:2px dotted var(--clay)">пунктиром</span> можно нажать — будет перевод и озвучка.</p>
+      <div class="eyebrow">Osteopathy course · Курс остеопатии</div>
+      <h2 class="view-title">My Lessons</h2>
+      <p class="view-sub">Нажми на урок, чтобы открыть. Слова с <span style="color:var(--clay);border-bottom:2px dotted var(--clay)">пунктиром</span> можно нажать — будет перевод и озвучка.</p>
       <div id="lcards"></div>
     </div>
     <div id="lesson-reader" style="display:none"></div>
@@ -408,7 +412,44 @@ const VOCAB=[
  {en:"kneading",ru:"разминание",pron:"НИ-динг",def:"A massage move, like working dough."},
  {en:"effleurage",ru:"поглаживание",pron:"эф-лю-РАЖ",def:"Smooth, light gliding strokes."},
  {en:"heat",ru:"тепло",pron:"ХИИТ",def:"Warmth — used to relax tissue."},
- {en:"ice",ru:"лёд",pron:"АЙС",def:"Cold — used to calm pain at the end."}
+ {en:"ice",ru:"лёд",pron:"АЙС",def:"Cold — used to calm pain at the end."},
+ {en:"tenosynovitis",ru:"теносиновит",pron:"те-но-си-но-ВАЙ-тис",def:"Inflammation of the sheath that covers a tendon."},
+ {en:"plantar fasciitis",ru:"плантарный фасциит",pron:"ПЛАН-тар фа-ши-АЙ-тис",def:"Painful inflammation of the fascia on the sole of the foot."},
+ {en:"connective tissue",ru:"соединительная ткань",pron:"ко-НЕК-тив ТИ-шью",def:"Tissue that joins and supports other body parts."},
+ {en:"fibrosis",ru:"фиброз (рубцовая ткань)",pron:"фай-БРОУ-сис",def:"Hard, thick tissue that forms after injury."},
+ {en:"atrophy",ru:"атрофия (ослабление мышцы)",pron:"А-тро-фи",def:"When a muscle gets weak and small from no use."},
+ {en:"trigger finger",ru:"щёлкающий палец",pron:"ТРИ-гер ФИН-гер",def:"When a finger gets stuck and locks in one position."},
+ {en:"trigger point",ru:"триггерная точка",pron:"ТРИ-гер пойнт",def:"A tight, painful spot inside a muscle."},
+ {en:"dorsiflexion",ru:"тыльное сгибание стопы",pron:"дор-си-ФЛЕК-шн",def:"Bending the foot up, toward the shin."},
+ {en:"pes planus",ru:"плоскостопие",pron:"ПЕС ПЛЕЙ-нус",def:"A flat foot with a low arch."},
+ {en:"heel spur",ru:"пяточная шпора",pron:"ХИИЛ спер",def:"A small bony growth on the heel bone."},
+ {en:"sprain",ru:"растяжение связки",pron:"СПРЕЙН",def:"An injury to a ligament (bone to bone)."},
+ {en:"strain",ru:"растяжение мышцы/сухожилия",pron:"СТРЕЙН",def:"An injury to a muscle or a tendon."},
+ {en:"congestion",ru:"застой (крови/жидкости)",pron:"кон-ДЖЕС-чн",def:"Too much fluid or blood staying in one area."},
+ {en:"range of motion",ru:"амплитуда движения",pron:"рейндж ов МОУ-шн",def:"How far a joint can move."},
+ {en:"palpation",ru:"пальпация (прощупывание)",pron:"пал-ПЕЙ-шн",def:"Feeling the body with the hands to examine it."},
+ {en:"resisted action",ru:"движение с сопротивлением",pron:"ри-ЗИС-тид АК-шн",def:"Moving while the therapist gently pushes against it."},
+ {en:"tenderness",ru:"болезненность при касании",pron:"ТЕН-дер-нес",def:"Pain when you touch the area."},
+ {en:"swelling",ru:"отёк / припухлость",pron:"СУЭ-линг",def:"When a body part gets bigger because of fluid."},
+ {en:"De Quervain's",ru:"болезнь де Кервена",pron:"де кер-ВЕЙН",def:"Tenosynovitis of the two thumb tendons."},
+ {en:"Finkelstein test",ru:"тест Финкельштейна",pron:"ФИН-кел-стайн тест",def:"A test for de Quervain's: tilt the hand down."},
+ {en:"Speed test",ru:"тест Спида",pron:"СПИД тест",def:"A test for biceps tendonitis at the shoulder."},
+ {en:"painful arc",ru:"болезненная дуга",pron:"ПЕЙН-фул арк",def:"Shoulder pain when lifting the arm between 60 and 120 degrees."},
+ {en:"Noble test",ru:"тест Нобла",pron:"НОУ-бл тест",def:"A test for IT band syndrome at the knee."},
+ {en:"iliotibial band",ru:"подвздошно-большеберцовый тракт",pron:"и-лио-ТИ-би-ал бэнд",def:"A long band of fascia on the outside of the thigh."},
+ {en:"iliac crest",ru:"гребень подвздошной кости",pron:"И-ли-ак крест",def:"The top edge of the hip bone."},
+ {en:"greater trochanter",ru:"большой вертел",pron:"ГРЕЙ-тер тро-КАН-тер",def:"The bony bump on the side of the hip."},
+ {en:"acromion",ru:"акромион (верх плеча)",pron:"а-КРОУ-ми-он",def:"The bony point on top of the shoulder."},
+ {en:"gluteus",ru:"ягодичные мышцы",pron:"ГЛУ-ти-ус",def:"The muscles of the buttocks."},
+ {en:"gastrocnemius",ru:"икроножная мышца",pron:"гас-трок-НИ-ми-ус",def:"The big calf muscle."},
+ {en:"trapezius",ru:"трапециевидная мышца",pron:"тра-ПИ-зи-ус",def:"A large muscle of the neck and upper back."},
+ {en:"deltoid",ru:"дельтовидная мышца",pron:"ДЕЛ-тойд",def:"The rounded muscle of the shoulder."},
+ {en:"supraspinatus",ru:"надостная мышца",pron:"су-пра-спи-НА-тус",def:"A rotator cuff muscle of the shoulder."},
+ {en:"rotator cuff",ru:"вращательная манжета плеча",pron:"РОУ-тей-тор кафф",def:"The group of muscles around the shoulder joint."},
+ {en:"biceps brachii",ru:"двуглавая мышца плеча",pron:"БАЙ-цепс БРА-ки-ай",def:"The front muscle of the upper arm."},
+ {en:"mobilization",ru:"мобилизация сустава",pron:"мо-би-ли-ЗЕЙ-шн",def:"Gentle movement of a joint to improve motion."},
+ {en:"draping",ru:"драпировка (укрывание простынёй)",pron:"ДРЕЙ-пинг",def:"Covering the client with a sheet for privacy."},
+ {en:"informed consent",ru:"информированное согласие",pron:"ин-ФОРМД кон-СЕНТ",def:"Saying yes after you fully understand everything."}
 ];
 const VMAP={};VOCAB.forEach(v=>VMAP[v.en.toLowerCase()]=v);
 
@@ -537,6 +578,125 @@ const LESSONS=[
    {t:"script",en:"I will remove the oil from my hands. I will perform this technique without oil."},
    {t:"script",en:"Are you comfortable? I feel the fascia is releasing."},
    {t:"script",en:"My technique is over. I will apply heat for 3–5 minutes to relax the area. Is the temperature ok?"}
+  ]} ,
+ {id:"conditions",mod:2,icon:"🗂️",title:"The Conditions",ru:"Состояния (болезни)",
+  blocks:[
+   {t:"p",en:"In this module we study these common problems.",ru:"В этом модуле мы изучаем эти частые проблемы."},
+   {t:"subhead",en:"Tendonitis can happen in many places:",ru:"Тендинит бывает в разных местах:"},
+   {t:"p",en:"Supraspinatus (shoulder), Long head of biceps, Tennis elbow, Golfer's elbow, Patella (knee), and Achilles (heel).",ru:"Надостная мышца (плечо), длинная головка бицепса, теннисный локоть, локоть гольфиста, надколенник (колено) и ахилл (пятка)."},
+   {t:"subhead",en:"Other conditions:",ru:"Другие состояния:"},
+   {t:"p",en:"Iliotibial band friction syndrome, Plantar fasciitis, and Tenosynovitis (De Quervain's).",ru:"Синдром трения подвздошно-большеберцового тракта, плантарный фасциит и теносиновит (болезнь де Кервена)."},
+   {t:"callout",en:"The ending -itis means inflammation. So tendon + itis = inflammation of a tendon.",ru:"Окончание -itis значит воспаление. Значит tendon + itis = воспаление сухожилия."}
+  ]},
+ {id:"tendonitis-desc",mod:2,icon:"🔥",title:"Tendonitis — Description",ru:"Тендинит — описание",
+  blocks:[
+   {t:"illo",img:"Skeletal muscle.jpg",k:"tendon",cap:"When the tendon cannot glide well, it becomes inflamed · Когда сухожилие плохо скользит, оно воспаляется"},
+   {t:"p",en:"Sometimes tendons become inflamed. The pulling of the muscle starts to irritate the tendon.",ru:"Иногда сухожилия воспаляются. Тяга мышцы начинает раздражать сухожилие."},
+   {t:"p",en:"If the smooth gliding of the tendon is impaired (does not work well), the tendon becomes inflamed and movement becomes painful.",ru:"Если плавное скольжение сухожилия нарушено, оно воспаляется и движение становится болезненным."},
+   {t:"callout",en:"This is called tendonitis. It means inflammation of the tendon.",ru:"Это называется тендинит. Значит воспаление сухожилия."}
+  ]},
+ {id:"plantar",mod:2,icon:"🦶",title:"Plantar Fasciitis",ru:"Плантарный фасциит",
+  blocks:[
+   {t:"illo",img:"Plantar fascia.svg",k:"bodysuit",cap:"The plantar fascia runs along the sole, from the heel bone to the toes · Подошвенная фасция идёт по подошве, от пяточной кости к пальцам"},
+   {t:"p",en:"Plantar fasciitis is a painful inflammation of the plantar fascia.",ru:"Плантарный фасциит — это болезненное воспаление подошвенной фасции."},
+   {t:"p",en:"The plantar fascia is a thick band of connective tissue. It starts at the calcaneus (heel bone) and goes along the sole of the foot to the five toes.",ru:"Подошвенная фасция — толстая полоса соединительной ткани. Она начинается у пяточной кости и идёт по подошве к пяти пальцам."},
+   {t:"p",en:"It is common with long hours of standing or walking, and with a high body weight.",ru:"Часто бывает при долгом стоянии или ходьбе и при большом весе тела."},
+   {t:"subhead",en:"Signs",ru:"Признаки"},
+   {t:"p",en:"Pain under the heel. It is worst in the morning, on the first steps. A burning feeling across the bottom of the foot. It is hard to bend the foot up (dorsiflexion).",ru:"Боль под пяткой. Сильнее всего утром, на первых шагах. Жжение по подошве. Трудно поднять стопу вверх (тыльное сгибание)."},
+   {t:"callout",en:"The most common painful spot is the medial tubercle of the calcaneus — the inner part of the heel bone.",ru:"Самое частое болезненное место — медиальный бугорок пяточной кости, внутренняя часть пятки."}
+  ]},
+ {id:"tenosynovitis",mod:2,icon:"🖐️",title:"Tenosynovitis (De Quervain's)",ru:"Теносиновит (де Кервена)",
+  blocks:[
+   {t:"p",en:"Teno = tendon. Syno = the synovial sheath that covers the tendon. Itis = inflammation.",ru:"Teno = сухожилие. Syno = синовиальное влагалище, которое покрывает сухожилие. Itis = воспаление."},
+   {t:"p",en:"So tenosynovitis is inflammation of the sheath (the cover) around the tendon.",ru:"Значит теносиновит — это воспаление оболочки (покрытия) вокруг сухожилия."},
+   {t:"p",en:"It often causes strong pain in the hand and forearm, on the thumb side of the wrist.",ru:"Часто вызывает сильную боль в кисти и предплечье, со стороны большого пальца запястья."},
+   {t:"callout",en:"De Quervain's is tenosynovitis of the two thumb tendons. The test for it is the Finkelstein test.",ru:"Болезнь де Кервена — это теносиновит двух сухожилий большого пальца. Тест для неё — тест Финкельштейна."}
+  ]},
+ {id:"itband",mod:2,icon:"🦵",title:"IT Band Friction Syndrome",ru:"Синдром трения ПБ-тракта",
+  blocks:[
+   {t:"illo",img:"1105 Anterior and Posterior Views of Muscles.jpg",k:"bodysuit",cap:"The iliotibial band runs down the outside of the thigh to the knee · Тракт идёт снаружи бедра к колену"},
+   {t:"p",en:"The iliotibial band (IT band) is a thick band of fascia on the outside of the thigh. It crosses the hip and attaches near the knee (to the patella, tibia and biceps femoris tendon).",ru:"Подвздошно-большеберцовый тракт — толстая полоса фасции снаружи бедра. Пересекает бедро и крепится у колена."},
+   {t:"p",en:"IT band friction syndrome is a common knee injury. It gives lateral knee pain — pain on the outside of the knee — from inflammation.",ru:"Синдром трения тракта — частая травма колена. Даёт боль снаружи колена из-за воспаления."},
+   {t:"subhead",en:"Signs",ru:"Признаки"},
+   {t:"p",en:"Pain on the outside of the knee (one or both legs). Pain in the low back, hip and knee. Tight gluteals, quadriceps and hamstrings. It is hard to straighten the leg. Pain when standing or walking. It feels better when lying on the back with the hip bent.",ru:"Боль снаружи колена (одна или обе ноги). Боль в пояснице, бедре и колене. Напряжены ягодицы, квадрицепс и задняя поверхность бедра. Трудно выпрямить ногу. Хуже стоя или при ходьбе. Легче лёжа на спине с согнутым бедром."}
+  ]},
+ {id:"signs",mod:2,icon:"🩺",title:"Signs & Symptoms",ru:"Признаки и симптомы",
+  blocks:[
+   {t:"subhead",en:"Tendonitis",ru:"Тендинит"},
+   {t:"p",en:"Pain in the joint. Tender to touch around the joint. Pain increases with movement and is worse at night. Swelling, with warm and red skin. A palpable adhesion. Weakness of the muscle and partial loss of function.",ru:"Боль в суставе. Болезненно при касании вокруг сустава. Боль растёт при движении и сильнее ночью. Отёк, тёплая и красная кожа. Прощупываемая спайка. Слабость мышцы и частичная потеря функции."},
+   {t:"p",en:"Special forms: Tennis elbow = pain on the outside of the forearm near the elbow. Achilles = pain just above the heel. Patellar = pain just below the kneecap. Rotator cuff = shoulder pain.",ru:"Частные формы: теннисный локоть = боль снаружи предплечья у локтя. Ахиллов = боль чуть выше пятки. Надколенниковый = боль чуть ниже колена. Вращательной манжеты = боль в плече."},
+   {t:"note",en:"In a small joint like a finger, the tendon can get scarred and lock in one position. This is called trigger finger.",ru:"В маленьком суставе, как палец, сухожилие может зарубцеваться и залипнуть — это «щёлкающий палец»."},
+   {t:"subhead",en:"Plantar Fasciitis",ru:"Плантарный фасциит"},
+   {t:"p",en:"Pain in the heel or arch, just in front of the heel. Most painful in the morning; the first steps are very painful. Worse after long standing. It is often confused with heel spurs.",ru:"Боль в пятке или своде, чуть впереди пятки. Сильнее утром; первые шаги очень болезненны. Хуже после долгого стояния. Часто путают с пяточной шпорой."}
+  ]},
+ {id:"causes",mod:2,icon:"❓",title:"Causes",ru:"Причины",
+  blocks:[
+   {t:"subhead",en:"Tendonitis",ru:"Тендинит"},
+   {t:"p",en:"Trauma, strain and fatigue — usually from overuse of a muscle. Old age is also a cause.",ru:"Травма, перенапряжение и усталость — обычно от чрезмерной нагрузки. Возраст тоже причина."},
+   {t:"subhead",en:"Plantar Fasciitis",ru:"Плантарный фасциит"},
+   {t:"p",en:"Overuse, like long hours of standing or walking. Shoes with poor support. A flat foot (pes planus). Trauma or landing hard on the foot. Usually ages 35–60, equal in men and women.",ru:"Чрезмерная нагрузка: долгое стояние или ходьба. Обувь без поддержки. Плоскостопие. Травма или жёсткое приземление на стопу. Обычно 35–60 лет, одинаково у мужчин и женщин."},
+   {t:"subhead",en:"IT Band Friction Syndrome",ru:"Синдром трения тракта"},
+   {t:"p",en:"Long bed rest, pregnancy, pelvic misalignment, sports or work overuse, and carrying heavy objects on one side.",ru:"Долгий постельный режим, беременность, перекос таза, перегрузка в спорте или на работе, ношение тяжестей на одной стороне."},
+   {t:"callout",en:"Remember: a strain is a muscle or tendon injury. A sprain is a ligament injury.",ru:"Запомни: strain — травма мышцы или сухожилия. Sprain — травма связки."}
+  ]},
+ {id:"goals",mod:2,icon:"🎯",title:"Aims / Goals of Treatment",ru:"Цели лечения",
+  blocks:[
+   {t:"subhead",en:"Tendonitis & Tenosynovitis",ru:"Тендинит и теносиновит"},
+   {t:"p",en:"Relieve congestion, inflammation and pain. Relieve spasm and tension. Decrease adhesions if present. Prevent muscle atrophy (weakness). Increase mobility, tone and strength. Return the muscle and tendon to normal function. Increase range of motion.",ru:"Снять застой, воспаление и боль. Снять спазм и напряжение. Уменьшить спайки. Предотвратить атрофию (слабость). Повысить подвижность, тонус и силу. Вернуть нормальную функцию мышцы и сухожилия. Увеличить амплитуду движения."},
+   {t:"subhead",en:"Plantar Fasciitis",ru:"Плантарный фасциит"},
+   {t:"p",en:"Prevent repeated attacks. Decrease inflammation and pain.",ru:"Предотвратить повторные приступы. Снизить воспаление и боль."},
+   {t:"subhead",en:"IT Band Friction Syndrome",ru:"Синдром трения тракта"},
+   {t:"p",en:"Decrease pain and spasm. Prevent and decrease fibrosis and adhesions. Keep joint range of motion. Decrease trigger points in nearby muscles. Stretch the IT band. Balance the pelvis and re-educate the patient about posture and gait.",ru:"Снизить боль и спазм. Предотвратить и уменьшить фиброз и спайки. Сохранить амплитуду сустава. Убрать триггерные точки в соседних мышцах. Растянуть тракт. Выровнять таз и обучить осанке и походке."}
+  ]},
+ {id:"tests",mod:2,icon:"🧪",title:"Orthopaedic Tests",ru:"Ортопедические тесты",
+  blocks:[
+   {t:"p",en:"To confirm the problem, the therapist checks three things: pain on resisted action, pain on palpation, and pain on stretch.",ru:"Чтобы подтвердить проблему, проверяют три вещи: боль при сопротивлении, при пальпации и при растяжении."},
+   {t:"pt",b:"Supraspinatus",where:"Shoulder · плечо",ru:"Painful arc 60–120°, Drop Arm, Empty Can"},
+   {t:"pt",b:"Biceps",where:"Front of arm · плечо/рука",ru:"Speed test, Yergason's"},
+   {t:"pt",b:"Common Extensors",where:"Tennis elbow · теннисный локоть",ru:"Cozen's, Mills"},
+   {t:"pt",b:"Common Flexors",where:"Golfer's elbow · локоть гольфиста",ru:"Reverse Cozen's, Reverse Mills"},
+   {t:"pt",b:"De Quervain's",where:"Thumb / wrist · большой палец",ru:"Finkelstein test"},
+   {t:"pt",b:"Plantar Fasciitis",where:"Foot · стопа",ru:"Plantar Fasciitis test"},
+   {t:"pt",b:"IT Band Syndrome",where:"Knee · колено",ru:"Noble's test"},
+   {t:"callout",en:"A positive test means the client shows signs of that problem.",ru:"Положительный тест значит, что у клиента есть признаки этой проблемы."}
+  ]},
+ {id:"treat-upper",mod:2,icon:"💪",title:"Treatment — Upper Body",ru:"Лечение — верх тела",
+  blocks:[
+   {t:"note",en:"Always treat the good (unaffected) side first.",ru:"Всегда сначала работай со здоровой (незатронутой) стороной."},
+   {t:"subhead",en:"Prone — face down",ru:"Prone — лёжа на животе"},
+   {t:"p",en:"Warm up the neck, shoulders and back. Do a general relaxation massage.",ru:"Разогрей шею, плечи и спину. Сделай общий расслабляющий массаж."},
+   {t:"p",en:"Trigger points: Upper Trapezius, Supraspinatus, Posterior and Lateral Deltoid, Levator Scapula, Rhomboids, Mid Trapezius, Teres Major, Teres Minor, Infraspinatus.",ru:"Триггерные точки: верхняя трапеция, надостная, задняя и латеральная дельта, мышца-подниматель лопатки, ромбовидные, средняя трапеция, большая и малая круглые, подостная."},
+   {t:"subhead",en:"Supine — face up",ru:"Supine — лёжа на спине"},
+   {t:"p",en:"Warm up the shoulder and arm. Trigger points: Anterior Deltoid, Biceps Brachii, Triceps Brachii, Brachioradialis.",ru:"Разогрей плечо и руку. Точки: передняя дельта, двуглавая, трёхглавая, плечелучевая."},
+   {t:"callout",en:"Friction the affected tendon 3 times. Do joint mobilizations on the affected joint. Finish with a general relaxing massage.",ru:"Трение больного сухожилия 3 раза. Мобилизация больного сустава. Заверши общим расслабляющим массажем."}
+  ]},
+ {id:"treat-lower",mod:2,icon:"🦿",title:"Treatment — Lower Body",ru:"Лечение — низ тела",
+  blocks:[
+   {t:"note",en:"Always treat the good (unaffected) side first.",ru:"Всегда сначала работай со здоровой стороной."},
+   {t:"subhead",en:"Prone — face down",ru:"Prone — лёжа на животе"},
+   {t:"p",en:"Warm up the neck, shoulders and back. Do a general relaxation massage.",ru:"Разогрей шею, плечи и спину. Сделай общий расслабляющий массаж."},
+   {t:"p",en:"Trigger points: Quadratus Lumborum, Gluteus Medius, Gluteus Maximus, Gluteus Minimus, Hamstrings, Gastrocnemius, Soleus, Tibialis Posterior.",ru:"Триггерные точки: квадратная мышца поясницы, средняя/большая/малая ягодичные, задняя поверхность бедра, икроножная, камбаловидная, задняя большеберцовая."},
+   {t:"p",en:"For IT band syndrome, pay extra attention to the greater trochanter and the iliac crest, to relax the muscle attachments.",ru:"При синдроме тракта — больше внимания большому вертелу и гребню подвздошной кости, чтобы расслабить места крепления мышц."},
+   {t:"callout",en:"Friction the affected tendon (if treating the Achilles). Finish with a general foot massage to relax.",ru:"Трение больного сухожилия (если работаешь с ахиллом). Заверши общим массажем стопы для расслабления."}
+  ]},
+ {id:"consent-test",mod:2,icon:"📝",title:"Script: Consent for a Test",ru:"Скрипт: согласие на тест",
+  blocks:[
+   {t:"p",en:"Say these lines to the client before a special test.",ru:"Говори эти фразы клиенту перед специальным тестом."},
+   {t:"script",en:"Now I would like to do a specific test for your ..."},
+   {t:"script",en:"This test is called ..."},
+   {t:"script",en:"I will look for a positive or negative result to help me make a clinical impression."},
+   {t:"script",en:"First I will explain the test, and then I will do it with you."},
+   {t:"script",en:"During this test, if you feel any pain, tingling or numbness, please tell me and we can stop."},
+   {t:"script",en:"For your safety I will stand beside you to support you."},
+   {t:"script",en:"Do you understand? Do you have any questions?"},
+   {t:"script",en:"May I have your consent to do this test?"},
+   {t:"script",en:"My clinical impression is: you are showing positive signs for the ... test. This means you are showing signs of ..."}
+  ]},
+ {id:"consent-sensitive",mod:2,icon:"🔒",title:"Consent: Sensitive Areas",ru:"Согласие: чувствительные зоны",
+  blocks:[
+   {t:"p",en:"Some areas need special written consent: the gluteal muscles, the upper inner thigh, and the chest (breast).",ru:"Некоторые зоны требуют особого письменного согласия: ягодичные мышцы, верхняя внутренняя часть бедра и грудь."},
+   {t:"p",en:"Before treatment, the osteopath explains: the reason for the assessment and the draping method; the benefits; the risks; that consent is voluntary; and that the client can change or withdraw consent at any time.",ru:"Перед лечением остеопат объясняет: причину осмотра и способ драпировки; пользу; риски; что согласие добровольное; и что клиент может изменить или отозвать согласие в любой момент."},
+   {t:"callout",en:"Draping means covering the client with a sheet for privacy. The client signs their name and the date to give informed consent.",ru:"Драпировка — это укрывание клиента простынёй для приватности. Клиент ставит имя и дату, чтобы дать информированное согласие."}
   ]}
 ];
 
@@ -557,14 +717,24 @@ function highlight(txt){
 /* =================================================================
    RENDER LESSONS
    ================================================================= */
+const MODULES={
+  1:{title:"Module 1 — Tendons & Fascia",ru:"Модуль 1 — Сухожилия и фасции"},
+  2:{title:"Module 2 — Conditions, Tests & Treatment",ru:"Модуль 2 — Состояния, тесты и лечение"}
+};
 function renderLessonList(){
-  const done=store.get("done",{});
-  document.getElementById("lcards").innerHTML=LESSONS.map(l=>`
-    <button class="lcard" onclick="openLesson('${l.id}')">
-      <span class="ico">${l.icon}</span>
-      <span class="meta"><b>${l.title}</b><span>${l.ru}</span></span>
-      ${done[l.id]?'<span class="done">✓</span>':'<span class="chev">›</span>'}
-    </button>`).join("");
+  var done=store.get("done",{});
+  var out="";var cur=null;
+  LESSONS.forEach(function(l){
+    var m=l.mod||1;
+    if(m!==cur){cur=m;var mo=MODULES[m]||{title:"",ru:""};
+      out+='<div class="mod-head"><b>'+mo.title+'</b><span>'+mo.ru+'</span></div>';}
+    out+='<button class="lcard" onclick="openLesson(\''+l.id+'\')">'
+      +'<span class="ico">'+l.icon+'</span>'
+      +'<span class="meta"><b>'+l.title+'</b><span>'+l.ru+'</span></span>'
+      +(done[l.id]?'<span class="done">\u2713</span>':'<span class="chev">\u203A</span>')
+      +'</button>';
+  });
+  document.getElementById("lcards").innerHTML=out;
 }
 function blockHTML(b){
   switch(b.t){
@@ -731,7 +901,27 @@ const CONTENT_Q=[
  {q:"Before friction you must get…",ru:"Перед трением нужно получить…",a:"Extra consent",opts:["Extra consent","A coffee","A new towel","Money first"],
   ex:"Friction is painful, so you must ask for extra consent first.",exRu:"Трение болезненно, поэтому сначала нужно дополнительное согласие."},
  {q:"A ligament connects…",ru:"Связка соединяет…",a:"Bone to bone",opts:["Bone to bone","Muscle to bone","Skin to muscle","Hair to skin"],
-  ex:"A ligament joins bone to bone. A tendon joins muscle to bone.",exRu:"Связка соединяет кость с костью. Сухожилие — мышцу с костью."}
+  ex:"A ligament joins bone to bone. A tendon joins muscle to bone.",exRu:"Связка соединяет кость с костью. Сухожилие — мышцу с костью."},
+ {q:"Plantar fasciitis affects which part of the body?",ru:"Плантарный фасциит поражает какую часть тела?",a:"The sole of the foot",opts:["The sole of the foot","The shoulder","The neck","The hand"],
+  ex:"The plantar fascia runs along the sole of the foot, from the heel to the toes.",exRu:"Подошвенная фасция идёт по подошве стопы, от пятки к пальцам."},
+ {q:"When is plantar fasciitis pain usually worst?",ru:"Когда боль при плантарном фасциите обычно сильнее всего?",a:"Morning, first steps",opts:["Morning, first steps","Late at night","After eating","While swimming"],
+  ex:"Pain is usually worst in the morning, on the first steps on the floor.",exRu:"Боль обычно сильнее всего утром, на первых шагах."},
+ {q:"The ending '-itis' means…",ru:"Окончание «-itis» означает…",a:"Inflammation",opts:["Inflammation","Bone","Muscle","Cold"],
+  ex:"'-itis' means inflammation. Tendon + itis = inflammation of a tendon.",exRu:"«-itis» значит воспаление. Tendon + itis = воспаление сухожилия."},
+ {q:"Tenosynovitis is inflammation of…",ru:"Теносиновит — это воспаление…",a:"The sheath around a tendon",opts:["The sheath around a tendon","A bone","The skin","A ligament"],
+  ex:"Teno = tendon, syno = sheath, itis = inflammation. It is inflammation of the tendon sheath.",exRu:"Teno = сухожилие, syno = влагалище, itis = воспаление. Это воспаление оболочки сухожилия."},
+ {q:"Which test checks for De Quervain's?",ru:"Какой тест проверяет болезнь де Кервена?",a:"Finkelstein test",opts:["Finkelstein test","Speed test","Noble test","Empty Can"],
+  ex:"The Finkelstein test (tilt the hand down) checks for De Quervain's.",exRu:"Тест Финкельштейна (наклон кисти вниз) проверяет болезнь де Кервена."},
+ {q:"IT band syndrome gives pain on the…",ru:"Синдром ПБ-тракта даёт боль…",a:"Outside of the knee",opts:["Outside of the knee","Top of the head","Inside of the elbow","Sole of the foot"],
+  ex:"IT band friction syndrome gives lateral knee pain — on the outside of the knee.",exRu:"Синдром трения тракта даёт боль снаружи колена."},
+ {q:"A sprain is an injury to a…",ru:"Sprain — это травма…",a:"Ligament",opts:["Ligament","Muscle","Tendon","Bone"],
+  ex:"A sprain is a ligament injury. A strain is a muscle or tendon injury.",exRu:"Sprain — травма связки. Strain — травма мышцы или сухожилия."},
+ {q:"In treatment, which side do you treat first?",ru:"Какую сторону лечат первой?",a:"The good (unaffected) side",opts:["The good (unaffected) side","The painful side","Both at once","Neither"],
+  ex:"Always treat the good, unaffected side first.",exRu:"Всегда сначала лечат здоровую, незатронутую сторону."},
+ {q:"'Draping' means…",ru:"«Draping» означает…",a:"Covering the client with a sheet",opts:["Covering the client with a sheet","Using more oil","Cleaning the table","Playing music"],
+  ex:"Draping is covering the client with a sheet for privacy.",exRu:"Драпировка — укрывание клиента простынёй для приватности."},
+ {q:"Muscle atrophy means the muscle becomes…",ru:"Атрофия мышцы значит, что мышца становится…",a:"Weak and small",opts:["Weak and small","Big and strong","Warm","Red"],
+  ex:"Atrophy means the muscle gets weak and small from not being used.",exRu:"Атрофия — мышца слабеет и уменьшается от бездействия."}
 ];
 let qType="vocab",qList=[],qIdx=0,qScore=0,qAnswered=false;
 function startQuiz(type){
